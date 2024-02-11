@@ -34,6 +34,8 @@ class GazeboService : public rclcpp::Node
       
       timer_ = this->create_wall_timer(
         60s, std::bind(&GazeboService::timer_callback, this));
+        
+      set_goal_state();
     }
     
   private:
@@ -45,7 +47,7 @@ class GazeboService : public rclcpp::Node
     
     void set_goal_state()
     {
-      int i = rand() % 4;
+      int i = rand() % goal_pose_list_.size();
       auto goal_pose = goal_pose_list_[i];
       
       auto state = std::make_shared<gazebo_msgs::srv::SetEntityState::Request>();
@@ -77,9 +79,8 @@ class GazeboService : public rclcpp::Node
     void task_success_callback(const std::shared_ptr<std_srvs::srv::Empty::Request>, 
       std::shared_ptr<std_srvs::srv::Empty::Response>)
     {
-      set_agent_state();
       set_goal_state();
-      timer_.reset();
+      timer_->reset();
     }
     
     void task_fail_callback(const std::shared_ptr<std_srvs::srv::Empty::Request>, 
@@ -87,7 +88,7 @@ class GazeboService : public rclcpp::Node
     {
       set_agent_state();
       set_goal_state();
-      timer_.reset();
+      timer_->reset();
     }
     
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr goal_pose_publisher_;

@@ -25,7 +25,7 @@ class Env(Node):
     self.goal_dis = 10
     self.goal_angle = 0.0
     
-    self.goal_pose = (-2.0, -4.0)
+    self.goal_pose = (10, 10)
     
     self.done = False
     self.success = False
