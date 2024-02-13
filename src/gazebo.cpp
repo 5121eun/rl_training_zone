@@ -47,20 +47,21 @@ class GazeboService : public rclcpp::Node
     
     void set_goal_state()
     {
-      int i = rand() % goal_pose_list_.size();
-      auto goal_pose = goal_pose_list_[i];
+      int x = rand() % 90;
+      int y = rand() % 90;
+      x = (x / 10) - 4.5;
+      y = (y / 10) - 4.5;
       
       auto state = std::make_shared<gazebo_msgs::srv::SetEntityState::Request>();
-      state->state.name = "unit_sphere";
-      state->state.pose.position.x = std::get<0>(goal_pose);
-      state->state.pose.position.y = std::get<1>(goal_pose);
-      state->state.pose.position.z = std::get<2>(goal_pose);
+      state->state.name = "unit_box";
+      state->state.pose.position.x = x;
+      state->state.pose.position.y = y;
       
       entity_state_client_->async_send_request(state);
       
       auto pose = geometry_msgs::msg::Pose();
-      pose.position.x = std::get<0>(goal_pose);
-      pose.position.y = std::get<1>(goal_pose);
+      pose.position.x = x;
+      pose.position.y = y;
       
       goal_pose_publisher_->publish(pose);
     }
@@ -71,7 +72,6 @@ class GazeboService : public rclcpp::Node
       state->state.name = "turtlebot3_burger";
       state->state.pose.position.x = 0.0;
       state->state.pose.position.y = 0.0;
-      state->state.pose.position.z = 0.0;
       
       entity_state_client_->async_send_request(state);
     }
@@ -100,13 +100,6 @@ class GazeboService : public rclcpp::Node
     rclcpp::Client<std_srvs::srv::Empty>::SharedPtr reset_client_;
     
     rclcpp::TimerBase::SharedPtr timer_;
-    
-    std::vector<std::tuple<float, float, float>> goal_pose_list_ = {
-      {-2.0, -4.0, 0.0},
-      {-2.0, 4.0, 0.0},
-      {3.0, -4.0, 0.0},
-      {2.0, 4.0, 0.0},
-    };
 };
 
 int main(int argc, char * argv[])

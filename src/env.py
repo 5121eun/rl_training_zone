@@ -53,7 +53,7 @@ class Env(Node):
   def step_callback(self, req, res):
   
     act_msg = Twist()
-    act_msg.linear.x = 0.3
+    act_msg.linear.x = 0.5
     act_msg.angular.z = ((3 - 1)/2 - req.action) * 1.5
         
     self.cmd_vel_pub.publish(act_msg)
@@ -111,7 +111,7 @@ class Env(Node):
     
   def get_state(self):
     state = list()
-    state.append(float(self.min_range) if self.min_range < 500 else 0.0)
+    state.append(float(self.min_range) if self.min_range < 3.5 else 3.5)
     state.append(float(self.min_angle)/360)
     state.append(float(self.goal_init_dis) / 2 - float(self.goal_dis))
     state.append(float(self.goal_angle))
